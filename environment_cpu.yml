@@ -1,0 +1,27 @@
+channels:
+  - pytorch
+  - dglteam
+  - defaults
+dependencies:
+  - python>=3.6
+  - pytorch
+  - torchvision
+  - torchaudio
+  - numpy
+  - scipy
+  - scikit-learn
+  - pandas
+  - matplotlib
+  - networkx
+  - dgl
+  - requests
+  - pip
+  - tqdm
+  - pip:
+    - epiweeks
+# For development
+  - ipykernel
+  - jupyter
+  - black
+  - pylint
+  - flake8

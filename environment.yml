@@ -1,0 +1,28 @@
+channels:
+  - pytorch
+  - dglteam
+  - defaults
+dependencies:
+  - python>=3.6
+  - cudatoolkit=10.2
+  - pytorch
+  - torchvision
+  - torchaudio
+  - numpy
+  - scipy
+  - scikit-learn
+  - pandas
+  - matplotlib
+  - networkx
+  - dgl-cuda10.2
+  - requests
+  - pip
+  - tqdm
+  - pip:
+    - epiweeks
+# For development
+  - ipykernel
+  - jupyter
+  - black
+  - pylint
+  - flake8
