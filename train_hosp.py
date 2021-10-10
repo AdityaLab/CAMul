@@ -131,22 +131,28 @@ label_idx = include_cols.index("cdc_hospitalized")
 
 raw_data_unnorm = raw_data.copy()
 
+
 class ScalerFeat:
     def __init__(self, raw_data):
         self.means = np.mean(raw_data, axis=1)
         self.vars = np.std(raw_data, axis=1) + 1e-8
 
     def transform(self, data):
-        return (data - np.transpose(self.means[:, :, None], (0, 2, 1))) / np.transpose(self.vars[:, :, None], (0, 2, 1))
+        return (data - np.transpose(self.means[:, :, None], (0, 2, 1))) / np.transpose(
+            self.vars[:, :, None], (0, 2, 1)
+        )
 
     def inverse_transform(self, data):
-        return data * np.transpose(self.vars[:, :, None], (0, 2, 1)) + np.transpose(self.means[:, :, None], (0, 2, 1))
-    
+        return data * np.transpose(self.vars[:, :, None], (0, 2, 1)) + np.transpose(
+            self.means[:, :, None], (0, 2, 1)
+        )
+
     def transform_idx(self, data, idx=label_idx):
         return (data - self.means[:, idx]) / self.vars[:, idx]
-    
+
     def inverse_transform_idx(self, data, idx=label_idx):
         return data * self.vars[:, idx] + self.means[:, idx]
+
 
 scaler = ScalerFeat(raw_data)
 raw_data = scaler.transform(raw_data)
@@ -207,6 +213,7 @@ fnp_enc = RegressionFNP2(
     add_atten=False,
 ).to(device)
 
+
 def load_model(folder, file=save_model_name):
     """
     Load model
@@ -217,6 +224,7 @@ def load_model(folder, file=save_model_name):
     seq_enc.load_state_dict(torch.load(os.path.join(full_path, "seq_enc.pt")))
     fnp_enc.load_state_dict(torch.load(os.path.join(full_path, "fnp_enc.pt")))
 
+
 def save_model(folder, file=save_model_name):
     """
     Save model
@@ -226,6 +234,8 @@ def save_model(folder, file=save_model_name):
     torch.save(feat_enc.state_dict(), os.path.join(full_path, "feat_enc.pt"))
     torch.save(seq_enc.state_dict(), os.path.join(full_path, "seq_enc.pt"))
     torch.save(fnp_enc.state_dict(), os.path.join(full_path, "fnp_enc.pt"))
+
+
 # Build dataset
 class SeqData(torch.utils.data.Dataset):
     def __init__(self, X, Y):
@@ -241,17 +251,18 @@ class SeqData(torch.utils.data.Dataset):
             float_tensor(self.Y[idx]),
         )
 
+
 train_dataset = SeqData(X_train, Y_train)
 val_dataset = SeqData(X_val, Y_val)
 train_loader = torch.utils.data.DataLoader(
     train_dataset, batch_size=batch_size, shuffle=True
 )
 val_loader = torch.utils.data.DataLoader(
-    val_dataset, batch_size=batch_size, shuffle=True
+    val_dataset, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=4
 )
 
 if start_model != "None":
-    load_model("./hosp_models" ,file=start_model)
+    load_model("./hosp_models", file=start_model)
     print("Loaded model from", start_model)
 
 opt = torch.optim.Adam(
@@ -269,8 +280,8 @@ def train_step(data_loader, X, Y, X_ref):
     feat_enc.train()
     seq_enc.train()
     fnp_enc.train()
-    total_loss = 0.
-    train_err = 0.
+    total_loss = 0.0
+    train_err = 0.0
     YP = []
     T_target = []
     for i, (x, y) in enumerate(data_loader):
@@ -278,14 +289,20 @@ def train_step(data_loader, X, Y, X_ref):
         x_seq = seq_enc(float_tensor(X_ref).unsqueeze(2))
         x_feat = feat_enc(x)
         loss, yp, _ = fnp_enc(x_seq, float_tensor(X_ref), x_feat, y)
-        yp = yp[X_ref.shape[0]:]
+        yp = yp[X_ref.shape[0] :]
         loss.backward()
         opt.step()
         YP.append(yp.detach().cpu().numpy())
         T_target.append(y.detach().cpu().numpy())
         total_loss += loss.detach().cpu().numpy()
         train_err += torch.pow(yp - y, 2).mean().sqrt().detach().cpu().numpy()
-    return total_loss / (i + 1), train_err / (i + 1), np.array(YP).ravel(), np.array(T_target).ravel()
+    return (
+        total_loss / (i + 1),
+        train_err / (i + 1),
+        np.array(YP).ravel(),
+        np.array(T_target).ravel(),
+    )
+
 
 def val_step(data_loader, X, Y, X_ref, sample=True):
     """
@@ -295,17 +312,20 @@ def val_step(data_loader, X, Y, X_ref, sample=True):
         feat_enc.eval()
         seq_enc.eval()
         fnp_enc.eval()
-        val_err = 0.
+        val_err = 0.0
         YP = []
         T_target = []
         for i, (x, y) in enumerate(data_loader):
             x_seq = seq_enc(float_tensor(X_ref).unsqueeze(2))
             x_feat = feat_enc(x)
-            yp, _, vars, _, _, _, _ = fnp_enc.predict(x_feat, x_seq, float_tensor(X_ref), sample)
+            yp, _, vars, _, _, _, _ = fnp_enc.predict(
+                x_feat, x_seq, float_tensor(X_ref), sample
+            )
             val_err += torch.pow(yp - y, 2).mean().sqrt().detach().cpu().numpy()
             YP.append(yp.detach().cpu().numpy())
             T_target.append(y.detach().cpu().numpy())
         return val_err / (i + 1), np.array(YP).ravel(), np.array(T_target).ravel()
+
 
 def test_step(X, X_ref, samples=1000):
     """
@@ -319,7 +339,9 @@ def test_step(X, X_ref, samples=1000):
         for i in range(samples):
             x_seq = seq_enc(float_tensor(X_ref).unsqueeze(2))
             x_feat = feat_enc(float_tensor(X))
-            yp, _, vars, _, _, _, _ = fnp_enc.predict(x_feat, x_seq, float_tensor(X_ref), sample=False)
+            yp, _, vars, _, _, _, _ = fnp_enc.predict(
+                x_feat, x_seq, float_tensor(X_ref), sample=False
+            )
             YP.append(yp.detach().cpu().numpy())
         return np.array(YP)
 
@@ -338,7 +360,7 @@ for ep in range(epochs):
         print("Saved model")
     print()
     print()
-    if ep>100 and ep - min_val_epoch > patience:
+    if ep > 100 and ep - min_val_epoch > patience:
         break
 
 # Now we get results
