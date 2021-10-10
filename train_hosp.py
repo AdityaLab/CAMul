@@ -350,5 +350,5 @@ Y_test_unnorm = scaler.inverse_transform_idx(Y_test, label_idx)
 
 # Save predictions
 os.makedirs(f"./hosp_predictions", exist_ok=True)
-with open(f"./hosp_predictions/{start_model}_predictions.pkl", "wb") as f:
+with open(f"./hosp_predictions/{save_model_name}_predictions.pkl", "wb") as f:
     pickle.dump(Y_test_unnorm, f)
