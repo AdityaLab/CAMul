@@ -20,11 +20,11 @@ from models.multimodels import (
 from models.fnpmodels import RegressionFNP2
 
 parser = OptionParser()
-parser.add_option("-e", "--epiweek", dest="epiweek", default="202139", type="string")
+parser.add_option("-e", "--epiweek", dest="epiweek", default="202113", type="string")
 parser.add_option("--epochs", dest="epochs", default=1500, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
 parser.add_option("--patience", dest="patience", default=100, type="int")
-parser.add_option("-d", "--day", dest="day_ahead", default=1, type="int")
+parser.add_option("-w", "--week", dest="week_ahead", default=1, type="int")
 parser.add_option("-s", "--seed", dest="seed", default=0, type="int")
 parser.add_option("-b", "--batch", dest="batch_size", default=128, type="int")
 parser.add_option("-m", "--save", dest="save_model", default="default", type="string")
@@ -34,7 +34,7 @@ parser.add_option("--start", dest="start_day", default=-120, type="int")
 
 (options, args) = parser.parse_args()
 epiweek = options.epiweek
-day_ahead = options.day_ahead
+week_ahead = options.week_ahead
 seed = options.seed
 save_model_name = options.save_model
 start_model = options.start_model
@@ -123,11 +123,11 @@ states = [
 
 raw_data = []
 for st in states:
-    with open(f"./data/hosp_data/saves/hosp_{st}_{epiweek}.pkl", "rb") as fl:
+    with open(f"./data/covid_data/saves/covid_{st}_{epiweek}.pkl", "rb") as fl:
         raw_data.append(pickle.load(fl))
 
 raw_data = np.array(raw_data)[:, start_day:, :]  # states x days x features
-label_idx = include_cols.index("cdc_hospitalized")
+label_idx = include_cols.index("death_jhu_incidence")
 
 raw_data_unnorm = raw_data.copy()
 
@@ -161,15 +161,15 @@ raw_data = scaler.transform(raw_data)
 # Chunk dataset sequences
 
 
-def prefix_sequences(seq, day_ahead=day_ahead):
+def prefix_sequences(seq, week_ahead=week_ahead):
     """
     Prefix sequences with zeros
     """
     l = len(seq)
-    X, Y = np.zeros((l - day_ahead, l, seq.shape[-1])), np.zeros(l - day_ahead)
-    for i in range(l - day_ahead):
+    X, Y = np.zeros((l - week_ahead, l, seq.shape[-1])), np.zeros(l - week_ahead)
+    for i in range(l - week_ahead):
         X[i, (l - i - 1) :, :] = seq[: i + 1, :]
-        Y[i] = seq[i + day_ahead, label_idx]
+        Y[i] = seq[i + week_ahead, label_idx]
     return X, Y
 
 
@@ -262,7 +262,7 @@ val_loader = torch.utils.data.DataLoader(
 )
 
 if start_model != "None":
-    load_model("./hosp_models", file=start_model)
+    load_model("./mort_models", file=start_model)
     print("Loaded model from", start_model)
 
 opt = torch.optim.Adam(
@@ -356,7 +356,7 @@ for ep in range(epochs):
     print(f"Val err: {val_err:.4f}")
     if val_err < min_val_err:
         min_val_err = val_err
-        save_model("./hosp_models")
+        save_model("./mort_models")
         print("Saved model")
     print()
     print()
@@ -364,13 +364,13 @@ for ep in range(epochs):
         break
 
 # Now we get results
-load_model("./hosp_models")
+load_model("./mort_models")
 X_test = raw_data
 Y_test = test_step(X_test, X_ref, samples=2000).squeeze()
 
 Y_test_unnorm = scaler.inverse_transform_idx(Y_test, label_idx)
 
 # Save predictions
-os.makedirs(f"./hosp_predictions", exist_ok=True)
-with open(f"./hosp_predictions/{start_model}_predictions.pkl", "wb") as f:
+os.makedirs(f"./mort_predictions", exist_ok=True)
+with open(f"./mort_predictions/{start_model}_predictions.pkl", "wb") as f:
     pickle.dump(Y_test_unnorm, f)
