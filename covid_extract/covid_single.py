@@ -24,7 +24,7 @@ include_cols = [
 
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="X",)
-parser.add_option("-e", "--epiweek", dest="epiweek", default="202113",)
+parser.add_option("-e", "--epiweek", dest="epiweek", default="202140",)
 parser.add_option("-s", "--smooth", dest="smooth", default=1, type="int")
 (options, args) = parser.parse_args()
 
