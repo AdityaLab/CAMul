@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from optparse import OptionParser
 import pickle, os
-from covid_extract.hosp_consts import *
+from .hosp_consts import *
 
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="X",)

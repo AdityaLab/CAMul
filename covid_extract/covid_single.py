@@ -1,26 +1,9 @@
 import numpy as np
 import pandas as pd
-
 from optparse import OptionParser
 import pickle, os
+from .hosp_consts import *
 
-include_cols = [
-    "retail_and_recreation_percent_change_from_baseline",
-    "grocery_and_pharmacy_percent_change_from_baseline",
-    "parks_percent_change_from_baseline",
-    "transit_stations_percent_change_from_baseline",
-    "workplaces_percent_change_from_baseline",
-    "residential_percent_change_from_baseline",
-    "covidnet",
-    "positiveIncrease",
-    "negativeIncrease",
-    "cdc_hospitalized",
-    "death_jhu_incidence",
-    "dex_a",
-    "apple_mobility",
-    "fb_survey_cli",
-    "fb_survey_wili",
-]
 
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="X",)
