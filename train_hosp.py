@@ -20,7 +20,7 @@ from models.multimodels import (
 from models.fnpmodels import RegressionFNP2
 
 parser = OptionParser()
-parser.add_option("-e", "--epiweek", dest="epiweek", default="202139", type="string")
+parser.add_option("-e", "--epiweek", dest="epiweek", default="202140", type="string")
 parser.add_option("--epochs", dest="epochs", default=1500, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
 parser.add_option("--patience", dest="patience", default=100, type="int")
@@ -372,5 +372,5 @@ Y_test_unnorm = scaler.inverse_transform_idx(Y_test, label_idx)
 
 # Save predictions
 os.makedirs(f"./hosp_predictions", exist_ok=True)
-with open(f"./hosp_predictions/{start_model}_predictions.pkl", "wb") as f:
+with open(f"./hosp_predictions/{save_model_name}_predictions.pkl", "wb") as f:
     pickle.dump(Y_test_unnorm, f)
