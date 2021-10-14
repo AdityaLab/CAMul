@@ -3,28 +3,12 @@ import pandas as pd
 
 from optparse import OptionParser
 import pickle, os
+from .hosp_consts import *
 
-include_cols = [
-    "retail_and_recreation_percent_change_from_baseline",
-    "grocery_and_pharmacy_percent_change_from_baseline",
-    "parks_percent_change_from_baseline",
-    "transit_stations_percent_change_from_baseline",
-    "workplaces_percent_change_from_baseline",
-    "residential_percent_change_from_baseline",
-    "covidnet",
-    "positiveIncrease",
-    "negativeIncrease",
-    "cdc_hospitalized",
-    "death_jhu_incidence",
-    "dex_a",
-    "apple_mobility",
-    "fb_survey_cli",
-    "fb_survey_wili",
-]
 
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="X",)
-parser.add_option("-e", "--epiweek", dest="epiweek", default="202140",)
+parser.add_option("-e", "--epiweek", dest="epiweek", default="202113",)
 parser.add_option("-s", "--smooth", dest="smooth", default=1, type="int")
 (options, args) = parser.parse_args()
 
@@ -60,3 +44,4 @@ df = df.to_numpy()
 os.makedirs("./data/covid_data/saves", exist_ok=True)
 with open(f"./data/covid_data/saves/covid_{region}_{epiweek}.pkl", "wb") as f:
     pickle.dump(df, f)
+

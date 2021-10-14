@@ -5,5 +5,5 @@ declare -a regs=('AL' 'AK' 'AZ' 'AR' 'CA' 'CO' 'CT' 'DE' 'DC' 'FL' 'GA' 'ID' 'IL
 for r in "${regs[@]}"
 do
     echo "$r"
-    python ./covid_extract/hosp_single.py -r "$r" -e $1 -s 0
+    python -m covid_extract.hosp_single -r "$r" -e $1 -s 0
 done 
