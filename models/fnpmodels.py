@@ -557,7 +557,7 @@ class RegressionFNP(nn.Module):
         pyM = Normal(mean_yM, logstd_yM)
         log_pyM = torch.sum(pyM.log_prob(yM))
          
-        lambda_regul = [0.6, 0.7, 0.8, 0.9]
+        lambda_regul = [0.01, 0.1, 0.6, 0.7, 0.8, 0.9]
         obj_R = (log_pyR + log_pqz_R) / float(self.num_M)
         obj_M = (log_pyM + lambda_regul[0]*log_pqz_M) / float(XM.size(0))
 
