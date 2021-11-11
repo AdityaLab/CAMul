@@ -340,7 +340,7 @@ def test_step(X, X_ref, samples=1000):
             x_seq = seq_enc(float_tensor(X_ref).unsqueeze(2))
             x_feat = feat_enc(float_tensor(X))
             yp, _, vars, _, _, _, _ = fnp_enc.predict(
-                x_feat, x_seq, float_tensor(X_ref), sample=False
+                x_feat, x_seq, float_tensor(X_ref), sample=True
             )
             YP.append(yp.detach().cpu().numpy())
         return np.array(YP)
