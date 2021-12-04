@@ -15,3 +15,25 @@ include_cols = [
     "fb_survey_cli",
     "fb_survey_wili",
 ]
+
+include_cols_old = [
+    "retail_and_recreation_percent_change_from_baseline",
+    "grocery_and_pharmacy_percent_change_from_baseline",
+    "parks_percent_change_from_baseline",
+    "transit_stations_percent_change_from_baseline",
+    "workplaces_percent_change_from_baseline",
+    "residential_percent_change_from_baseline",
+    "covidnet",
+    "positiveIncrease",
+    "negativeIncrease",
+    "totalTestResultsIncrease",
+    "onVentilatorCurrently",
+    "inIcuCurrently",
+    "recovered",
+    "hospitalizedIncrease",
+    "death_jhu_incidence",
+    "dex_a",
+    "apple_mobility",
+    "Number of Facilities Reporting",
+    "CLI Percent of Total Visits",
+]

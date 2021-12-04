@@ -7,7 +7,7 @@ from optparse import OptionParser
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from covid_extract.hosp_consts import include_cols
+from covid_extract.hosp_consts import include_cols_old as include_cols
 
 from models.multimodels import (
     EmbedEncoder,

@@ -23,7 +23,7 @@ filepath = f"./data/covid_data/covid-hospitalization-all-state-merged_vEW{epiwee
 df = pd.read_csv(filepath)
 df = df[df["region"] == region]
 
-df = df[include_cols]
+df = df[include_cols_old]
 
 # Fill missing data
 df = df.fillna(method="ffill")
