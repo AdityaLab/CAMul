@@ -198,8 +198,8 @@ X_train, Y_train = (
 
 
 # Build model
-feat_enc = GRUEncoder(in_size=len(include_cols), out_dim=60,).to(device)
-seq_enc = GRUEncoder(in_size=1, out_dim=60,).to(device)
+feat_enc = GRUEncoder(in_size=len(include_cols), out_dim=60, bidirectional=True).to(device)
+seq_enc = GRUEncoder(in_size=1, out_dim=60, bidirectional=True).to(device)
 fnp_enc = RegressionFNP2(
     dim_x=60,
     dim_y=1,
@@ -348,19 +348,22 @@ def test_step(X, X_ref, samples=1000):
 
 min_val_err = np.inf
 min_val_epoch = 0
+all_losses = []
 for ep in range(epochs):
     print(f"Epoch {ep+1}")
     train_loss, train_err, yp, yt = train_step(train_loader, X_train, Y_train, X_ref)
     print(f"Train loss: {train_loss:.4f}, Train err: {train_err:.4f}")
     val_err, yp, yt = val_step(val_loader, X_val, Y_val, X_ref)
     print(f"Val err: {val_err:.4f}")
+    all_losses.append(val_err)
     if val_err < min_val_err:
         min_val_err = val_err
+        min_val_epoch = ep
         save_model("./mort_models")
         print("Saved model")
     print()
     print()
-    if ep > 100 and ep - min_val_epoch > patience:
+    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err + 0.15:
         break
 
 # Now we get results

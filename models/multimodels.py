@@ -145,8 +145,9 @@ class GRUEncoder(nn.Module):
 
     def __init__(self, in_size: int, out_dim: int, bidirectional: bool = False):
         super(GRUEncoder, self).__init__()
+        self.out_dim = out_dim // 2 if bidirectional else out_dim
         self.gru = nn.GRU(
-            in_size, out_dim, batch_first=True, bidirectional=bidirectional
+            in_size, self.out_dim, batch_first=True, bidirectional=bidirectional
         )
 
     def forward(self, batch):
