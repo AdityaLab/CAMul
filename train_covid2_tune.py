@@ -30,7 +30,7 @@ parser.add_option("-b", "--batch", dest="batch_size", default=128, type="int")
 parser.add_option("-m", "--save", dest="save_model", default="default", type="string")
 parser.add_option("--start_model", dest="start_model", default="None", type="string")
 parser.add_option("-c", "--cuda", dest="cuda", default=True, action="store_true")
-parser.add_option("--start", dest="start_day", default=-120, type="int")
+parser.add_option("--start", dest="start_day", default=-30, type="int")
 
 (options, args) = parser.parse_args()
 epiweek = options.epiweek
