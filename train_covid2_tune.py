@@ -20,10 +20,10 @@ from models.multimodels import (
 from models.fnpmodels import RegressionFNP2
 
 parser = OptionParser()
-parser.add_option("-e", "--epiweek", dest="epiweek", default="202113", type="string")
-parser.add_option("--epochs", dest="epochs", default=1500, type="int")
+parser.add_option("-e", "--epiweek", dest="epiweek", default="202148", type="string")
+parser.add_option("--epochs", dest="epochs", default=50, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
-parser.add_option("--patience", dest="patience", default=100, type="int")
+parser.add_option("--patience", dest="patience", default=50, type="int")
 parser.add_option("-w", "--week", dest="week_ahead", default=1, type="int")
 parser.add_option("-s", "--seed", dest="seed", default=0, type="int")
 parser.add_option("-b", "--batch", dest="batch_size", default=128, type="int")
@@ -374,6 +374,6 @@ Y_test = test_step(X_test, X_ref, samples=2000).squeeze()
 Y_test_unnorm = scaler.inverse_transform_idx(Y_test, label_idx)
 
 # Save predictions
-os.makedirs(f"./mort_predictions", exist_ok=True)
-with open(f"./mort_predictions/{save_model_name}_predictions.pkl", "wb") as f:
+os.makedirs(f"./tuning", exist_ok=True)
+with open(f"./tuning/{save_model_name}_predictions.pkl", "wb") as f:
     pickle.dump(Y_test_unnorm, f)
