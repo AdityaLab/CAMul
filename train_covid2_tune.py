@@ -21,7 +21,7 @@ from models.fnpmodels import RegressionFNP2
 
 parser = OptionParser()
 parser.add_option("-e", "--epiweek", dest="epiweek", default="202148", type="string")
-parser.add_option("--epochs", dest="epochs", default=50, type="int")
+parser.add_option("--epochs", dest="epochs", default=150, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
 parser.add_option("--patience", dest="patience", default=50, type="int")
 parser.add_option("-w", "--week", dest="week_ahead", default=1, type="int")
