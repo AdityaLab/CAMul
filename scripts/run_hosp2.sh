@@ -1,6 +1,6 @@
 #!/bin/bash
     
-counter=1
+i=1
 while [ $i -le 30 ]
     do
     python ./train_hosp2.py -e 202148 -m deploy_week_48_$i -c True -d $i 
