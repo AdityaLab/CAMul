@@ -181,8 +181,8 @@ prev_preds = []
 for i in range(1, day_ahead):
     with open(f"./hosp_predictions/{save_model_name_prefix}_{i}_predictions.pkl", "rb") as fl:
         prev_preds.append(pickle.load(fl))
-
-prev_preds = scaler.transform_idx(np.array(prev_preds), idx=label_idx)
+if(day_ahead!=1):
+    prev_preds = scaler.transform_idx(np.array(prev_preds), idx=label_idx)
 
 def prefix_sequences_preds(seq, state, day_ahead=day_ahead):
     """
