@@ -1,9 +1,9 @@
 #!/bin/bash
     
 counter=1
-while [ $counter -le 30 ]
+while [ $i -le 30 ]
     do
-    echo $counter
-    ((counter++))
+    python train_hosp2.py -e 202148 -m deploy_week_48_$i -c True -d $i 
+    ((i++))
     done
 echo All done
