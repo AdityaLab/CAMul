@@ -312,7 +312,6 @@ class SeqBootData(torch.utils.data.Dataset):
         self.Y = Y[:, None]
         self.X_pred = X_pred
         self.Y_pred = Y_pred[:, :, None]
-        self.rng = np.random.RandomState()
 
     def __len__(self):
         return self.X.shape[0] + self.X_pred.shape[0]
@@ -324,7 +323,7 @@ class SeqBootData(torch.utils.data.Dataset):
                 float_tensor(self.Y[idx]),
             )
         else:
-            idx2 = self.rng.randint(self.Y_pred.shape[1])
+            idx2 = np.random.randint(self.Y_pred.shape[1])
             return (
                 float_tensor(self.X_pred[idx - self.X.shape[0], :, :]),
                 float_tensor(self.Y_pred[idx - self.X.shape[0], idx2]),
@@ -337,10 +336,10 @@ else:
     train_dataset = SeqData(X_train, Y_train)
     val_dataset = SeqData(X_val, Y_val)
 train_loader = torch.utils.data.DataLoader(
-    train_dataset, batch_size=batch_size, shuffle=True
+    train_dataset, batch_size=batch_size, shuffle=True, worker_init_fn=lambda id: np.random.seed(torch.initial_seed() // 2*32 + id)
 )
 val_loader = torch.utils.data.DataLoader(
-    val_dataset, batch_size=batch_size, shuffle=True
+    val_dataset, batch_size=batch_size, shuffle=True, worker_init_fn=lambda id: np.random.seed(torch.initial_seed() // 2*32 + id)
 )
 
 if start_model != "None":
