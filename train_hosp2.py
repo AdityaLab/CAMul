@@ -24,6 +24,7 @@ parser.add_option("-e", "--epiweek", dest="epiweek", default="202140", type="str
 parser.add_option("--epochs", dest="epochs", default=1500, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
 parser.add_option("--patience", dest="patience", default=100, type="int")
+parser.add_option("--tolerance", dest="tol", default=0.1, type="float")
 parser.add_option("-d", "--day", dest="day_ahead", default=1, type="int")
 parser.add_option("-s", "--seed", dest="seed", default=0, type="int")
 parser.add_option("-b", "--batch", dest="batch_size", default=128, type="int")
@@ -49,6 +50,7 @@ batch_size = options.batch_size
 lr = options.lr
 epochs = options.epochs
 patience = options.patience
+tol = options.tol
 
 # First do sequence alone
 # Then add exo features
@@ -383,19 +385,22 @@ def test_step(X, X_ref, samples=1000):
 
 min_val_err = np.inf
 min_val_epoch = 0
+all_losses = []
 for ep in range(epochs):
     print(f"Epoch {ep+1}")
     train_loss, train_err, yp, yt = train_step(train_loader, X_train, Y_train, X_ref)
     print(f"Train loss: {train_loss:.4f}, Train err: {train_err:.4f}")
     val_err, yp, yt = val_step(val_loader, X_val, Y_val, X_ref)
     print(f"Val err: {val_err:.4f}")
+    all_losses.append(val_err)
     if val_err < min_val_err:
         min_val_err = val_err
+        min_val_epoch = ep
         save_model("./hosp_models")
         print("Saved model")
     print()
     print()
-    if ep > 100 and ep - min_val_epoch > patience:
+    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err * (1+tol):
         break
 
 # Now we get results

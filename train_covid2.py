@@ -24,6 +24,7 @@ parser.add_option("-e", "--epiweek", dest="epiweek", default="202113", type="str
 parser.add_option("--epochs", dest="epochs", default=1500, type="int")
 parser.add_option("--lr", dest="lr", default=1e-3, type="float")
 parser.add_option("--patience", dest="patience", default=100, type="int")
+parser.add_option("--tolerance", dest="tol", default=0.1, type="float")
 parser.add_option("-w", "--week", dest="week_ahead", default=1, type="int")
 parser.add_option("-s", "--seed", dest="seed", default=0, type="int")
 parser.add_option("-b", "--batch", dest="batch_size", default=128, type="int")
@@ -44,6 +45,7 @@ batch_size = options.batch_size
 lr = options.lr
 epochs = options.epochs
 patience = options.patience
+tol = options.tol
 
 # First do sequence alone
 # Then add exo features
@@ -363,7 +365,7 @@ for ep in range(epochs):
         print("Saved model")
     print()
     print()
-    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err + 0.15:
+    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err(1. + tol):
         break
 
 # Now we get results
