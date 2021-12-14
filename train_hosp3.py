@@ -330,9 +330,12 @@ class SeqBootData(torch.utils.data.Dataset):
                 float_tensor(self.Y_pred[idx - self.X.shape[0], idx2]),
             )
 
-
-train_dataset = SeqBootData(X_train, Y_train, X_prev_preds_train, Y_prev_preds_train)
-val_dataset = SeqBootData(X_val, Y_val, X_prev_preds_val, Y_prev_preds_val)
+if day_ahead > 1:
+    train_dataset = SeqBootData(X_train, Y_train, X_prev_preds_train, Y_prev_preds_train)
+    val_dataset = SeqBootData(X_val, Y_val, X_prev_preds_val, Y_prev_preds_val)
+else:
+    train_dataset = SeqData(X_train, Y_train)
+    val_dataset = SeqData(X_val, Y_val)
 train_loader = torch.utils.data.DataLoader(
     train_dataset, batch_size=batch_size, shuffle=True
 )
