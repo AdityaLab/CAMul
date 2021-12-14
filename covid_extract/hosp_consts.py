@@ -12,7 +12,7 @@ include_cols = [
     "death_jhu_incidence",
     "dex_a",
     "apple_mobility",
-    "fb_survey_cli",
+    "fb_survey_wcli",
     "fb_survey_wili",
 ]
 

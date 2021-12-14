@@ -17,7 +17,7 @@ smooth = options.smooth
 # TODO: Check which subset is the best for hospitalization data
 
 
-filepath = f"./data/hosp_data/covid-hospitalization-daily-all-state-merged_vEW{epiweek}.csv"
+filepath = f"./data/hosp_data/covid-hospitalization-daily-all-state-processed_vEW{epiweek}.csv"
 df = pd.read_csv(filepath)
 df = df[df["region"] == region]
 
