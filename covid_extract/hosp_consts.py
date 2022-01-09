@@ -16,6 +16,25 @@ include_cols = [
     "fb_survey_wili",
 ]
 
+include_cols_flu = [
+    "retail_and_recreation_percent_change_from_baseline",
+    "grocery_and_pharmacy_percent_change_from_baseline",
+    "parks_percent_change_from_baseline",
+    "transit_stations_percent_change_from_baseline",
+    "workplaces_percent_change_from_baseline",
+    "residential_percent_change_from_baseline",
+    "covidnet",
+    "positiveIncr",
+    "negativeIncr",
+    "cdc_hospitalized",
+    "death_jhu_incidence",
+    "dex_a",
+    "apple_mobility",
+    "fb_survey_wcli",
+    "fb_survey_wili",
+    "cdc_flu_hosp",
+]
+
 include_cols_old = [
     "retail_and_recreation_percent_change_from_baseline",
     "grocery_and_pharmacy_percent_change_from_baseline",
