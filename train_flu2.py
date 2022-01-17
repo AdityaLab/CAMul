@@ -340,7 +340,7 @@ def test_step(X, X_ref, samples=1000):
         YP = []
         for i in range(samples):
             x_seq = seq_enc(float_tensor(X_ref).unsqueeze(2))
-            x_feat = feat_enc(float_tensor(X))
+            x_feat = feat_enc(float_tensor(X[:,:,  label_idx: label_idx + 1]))
             yp, _, vars, _, _, _, _ = fnp_enc.predict(
                 x_feat, x_seq, float_tensor(X_ref), sample=True
             )
@@ -365,7 +365,7 @@ for ep in range(epochs):
         print("Saved model")
     print()
     print()
-    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err(1. + tol):
+    if ep > 100 and ep - min_val_epoch > patience and min(all_losses[-patience:]) > min_val_err*(1. + tol):
         break
 
 # Now we get results
