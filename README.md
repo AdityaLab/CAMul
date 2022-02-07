@@ -26,4 +26,17 @@ Symptoms dataset is available in `./data/symptom_data`. Run `./scripts/preproces
 
 We have `./train_tweets.py`, `./train_covid.py`, `./train_power.py`, `./train_symp.py` to run the model for each of the benchmarks. You may tune the arguments related week ahead, prediction week/season by passing the commandline arguments. Use the `--help` flag for a list of all arguments.
 
+## Acknowledgement
+
+In case you use our code or datasets, please cite us as:
+
+```
+@article{kamarthi2021camul,
+  title={CAMul: Calibrated and Accurate Multi-view Time-Series Forecasting},
+  author={Kamarthi, Harshavardhan and Kong, Lingkai and Rodr{\'\i}guez, Alexander and Zhang, Chao and Prakash, B Aditya},
+  journal={Proceedings of the Web Conference 2022},
+  year={2022}
+}
+```
+
 
